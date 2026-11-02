@@ -1,0 +1,86 @@
+# Credentials: templates are source-controlled; actual environments are private.
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Dependencies, builds, databases and local execution state.
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+dist/
+*.db
+*.sqlite
+*.bak
+*.log
+*.tsbuildinfo
+.DS_Store
+*.egg-info/
+.coverage
+htmlcov/
+.cache/
+
+# Private connector captures and development uploads.
+fixtures/
+khoj-backend/fixtures/
+artifacts/zipnet-inspection.zip
+artifacts/zipnet-inspection/
+
+# Generated evidence stays local. Publish documentation and curated regression inputs.
+artifacts/**
+!artifacts/**/
+!artifacts/**/*.md
+!artifacts/b1/hindi-synthetic-8s.wav
+!artifacts/b2-followup/baseline/llm.py
+!artifacts/b2-followup/baseline/models.yaml
+!artifacts/b2-followup/baseline/cases.v1.jsonl
+!artifacts/b2-followup/baseline/frozen-hashes.json
+artifacts/**/out.mp3
+out.mp3
+
+# MSW's runtime worker is recreated by npm install, not committed as generated code.
+/public/mockServiceWorker.js
+
+# Voice source material, speaker identities, recordings and supporting documents.
+voices/**
+!voices/**/
+!voices/**/README*
+!voices/**/*manifest*template*
+!voices/**/*manifest*example*
+!voices/**/scripts/**
+voices/_originals/
+voices/_private/
+voices/**/speaker_key*.csv
+voices/**/*.wav
+voices/**/*.mp3
+voices/**/*.m4a
+voices/**/*.flac
+voices/**/*.ogg
+voices/**/*.webm
+voices/**/*.mp4
+voices/**/*.pdf
+voices/**/*.jpg
+voices/**/*.png
+
+# Private connector directories always win over documentation exceptions above.
+artifacts/zipnet-inspection/
+
+# Unused original exports and legacy artwork; retain optimized runtime assets and licenses.
+/public/characters/*.png
+/public/sample-people/*.png
+/public/fonts/**/*.ttf
+/public/illustrations/
+/public/hilos-character.svg
+/next-env.d.ts
+
+# Local publication audit reports are generated, not source.
+/artifacts/publication/

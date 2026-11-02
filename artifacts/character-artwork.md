@@ -4,12 +4,12 @@ Created with the built-in image-generation tool for this revision. No reference-
 
 Assets:
 
-- `public/characters/indian-crowd.png` — original 1536 × 1024 crowd artwork.
-- `public/characters/indian-crowd.webp` — optimized browser asset.
-- `public/characters/indian-people-sheet.png` — original transparent 1536 × 1024 six-illustration sheet.
-- `public/characters/indian-people-sheet.webp` — optimized browser asset, preserving alpha.
+- `frontend/public/characters/indian-crowd.png` — original 1536 × 1024 crowd artwork.
+- `frontend/public/characters/indian-crowd.webp` — optimized browser asset.
+- `frontend/public/characters/indian-people-sheet.png` — original transparent 1536 × 1024 six-illustration sheet.
+- `frontend/public/characters/indian-people-sheet.webp` — optimized browser asset, preserving alpha.
 
-The sheet is displayed using six SVG viewports in `src/components/illustrations/HumanArt.tsx`. Its cells contain a woman with a magnifier, a man writing, a grandmother waving, a woman at a laptop, a family, and a volunteer with a clipboard. Characters are decorative illustrations, not record photos.
+The sheet is displayed using six SVG viewports in `frontend/src/components/illustrations/HumanArt.tsx`. Its cells contain a woman with a magnifier, a man writing, a grandmother waving, a woman at a laptop, a family, and a volunteer with a clipboard. Characters are decorative illustrations, not record photos.
 
 ## Final generation prompts
 

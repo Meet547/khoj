@@ -11,9 +11,10 @@ FastAPI backend, Gnani speech APIs, Ollama model routing, and a durable LangGrap
 > production ingestion, matching, review and notification delivery remain subsequent phases.
 > KHOJ is an independent project, not a police or emergency-dispatch service.
 
-[Architecture](docs/ARCHITECTURE.md) · [Backend guide](khoj-backend/README.md) ·
-[Intake API and deployment](docs/B2_INTAKE.md) · [Evaluation findings](artifacts/b2-followup/README.md) ·
-[Frontend phase notes](docs/FRONTEND_PHASES.md)
+[Project status](docs/project-status.md) · [Repository guide](docs/repository-structure.md) ·
+[Architecture](docs/architecture.md) · [Backend guide](khoj-backend/README.md) ·
+[Intake API and deployment](docs/intake.md) · [Evaluation findings](artifacts/b2-followup/README.md) ·
+[Frontend phase notes](docs/frontend-checkpoints.md)
 
 ## What works today
 
@@ -52,20 +53,25 @@ are application code; a model cannot approve a match, save a case or send an ale
 ## Repository layout
 
 ```text
-src/                          Frontend routes, features, components, translations and mocks
-public/                       Runtime artwork, icons and self-hosted fonts
-tests/                       Frontend unit and browser tests
-khoj-backend/
+frontend/                     Next.js app, public assets, npm configuration and frontend tests
+  src/app/                    Routes and thin page entry points
+  src/features/               Auth, intake, case, search, voice and marketing behavior
+  src/lib/                    Typed transport, storage, localization and shared utilities
+  scripts/                    UI audits and layout captures
+khoj-backend/                  FastAPI app, Python configuration and backend tests
   app/api/                    Authentication, speech, intake and administration endpoints
-  app/graph/                  Typed state, graph nodes, versioned prompts and language templates
-  app/db/                     PostgreSQL models, repository boundaries and Alembic migrations
-  app/integrations/           Speech, model and private-object adapters
-  scripts/                    Environment setup, demos, pre-generation and evaluation tools
+  app/graph/                  State, nodes, versioned prompts and language templates
+  app/db/                     Models, repositories and Alembic migrations
+  app/integrations/            Speech, model and private-object adapters
+  scripts/                    Setup, demos, speech pre-generation and evaluation tools
   evals/extraction/            Versioned development and held-out JSONL corpora
-  tests/                      Unit, database integration and opt-in provider tests
-docs/                         Architecture, API contracts and phase guides
-artifacts/                    Provenance, verification notes and curated regression baselines
+docs/                         Engineering guides, phase history and current project status
+artifacts/                    Provenance, verification notes and frozen regression baselines
+Makefile                      Root commands that delegate into each application
 ```
+
+Run `make help` at the root for application commands. Each application owns its dependencies and
+configuration; there is no root npm package. See [the documentation index](docs/README.md).
 
 Generated reports, screenshots, build outputs, private recordings, databases and connector captures
 are intentionally excluded. Historical verification notes may refer to local evidence that is not
@@ -85,6 +91,7 @@ published. Scripts regenerate the reports; CI uploads its own demo and evaluatio
 From the repository root:
 
 ```sh
+cd frontend
 npm ci
 # Fresh checkout only; preserve an existing local environment file.
 cp .env.example .env.local
@@ -136,7 +143,7 @@ Run migrations with the database owner; the application role should not have DDL
 
 ## Configuration
 
-Frontend `.env.local` contains public feature flags and a server-only backend origin:
+Frontend `frontend/.env.local` contains public feature flags and a server-only backend origin:
 
 ```dotenv
 NEXT_PUBLIC_USE_MOCK=0
@@ -180,7 +187,7 @@ Never put credentials in a `NEXT_PUBLIC_` variable, commit an actual `.env`, or 
 Guest sessions use a private cookie. After save, access is owner-scoped. Mutations support
 idempotent retries. Turn responses provide captions, draft evidence, stage and ordered audio URLs.
 Static speech is cache-only at request time; dynamic sentences synthesize concurrently. TTS failure
-does not discard a successful text turn. See [the complete contract](docs/B2_INTAKE.md).
+does not discard a successful text turn. See [the complete contract](docs/intake.md).
 
 ## Reproducible demos and evaluation
 
@@ -232,7 +239,8 @@ The [follow-up evaluation](artifacts/b2-followup/README.md) preserves the uncomf
 These small evaluations do not establish general real-world accuracy or production readiness.
 
 ```sh
-# Frontend, repository root
+# Frontend
+cd frontend
 npm run typecheck
 npm run lint
 npm test
@@ -241,7 +249,7 @@ npm run build
 npx playwright install chromium
 npm run test:e2e
 
-# Backend
+# Backend, from the repository root in a separate terminal
 cd khoj-backend
 uv run ruff check .
 uv run ruff format --check .
@@ -270,7 +278,7 @@ Without a database URL, database-dependent tests skip. Live tests are opt-in wit
   curated evaluation inputs and test baselines are published.
 
 Before a public rollout, complete the remaining product integration and operational gates in
-[the architecture](docs/ARCHITECTURE.md) and [phase plan](docs/CODEX_PROMPTS.md).
+[the architecture](docs/architecture.md) and [phase plan](docs/phase-plan.md).
 
 ## Contributing
 

@@ -1,5 +1,9 @@
 # Frontend execution checkpoints
 
+Historical checkpoints below predate the directory cleanup. Frontend source, tests and tool
+configuration now live in `frontend/`; artifact paths remain relative to the repository root.
+See [current project status](project-status.md) for the latest readiness and validation.
+
 ## F0 — accepted
 
 Commit 581bdcd. Responsive layout, mobile dock clearance and scroll behavior, quiet task navigation,

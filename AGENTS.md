@@ -7,3 +7,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Repository boundaries
+
+- Frontend commands run in `frontend/`; its installed Next.js guides are in
+  `frontend/node_modules/next/dist/docs/`. Read `frontend/AGENTS.md` before frontend work.
+- Backend commands run in `khoj-backend/`. Keep its lockfiles, migrations and eval corpora there.
+- Use `make help` for root command entry points; see `docs/repository-structure.md` for placement.
+- Preserve frozen prompts, schemas, eval labels and baseline hashes unless the task requires changing them.
+- Never version environments, private captures/recordings, databases or generated run outputs.

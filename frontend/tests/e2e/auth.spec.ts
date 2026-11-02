@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
+import { artifactPath } from '../../scripts/paths.mjs';
 const mobile = () => String(9100000000 + Math.floor(Math.random() * 800000000));
 async function language(page: Page) {
   await page.addInitScript(() => localStorage.setItem('khoj-language', 'en'));
@@ -37,15 +38,15 @@ test('guest report reaches Save before OTP, then creates a cookie-owned case', a
   await page.getByRole('button', { name: 'Send verification code', exact: true }).click();
   await expect(page.getByText('Demo mode: OTP is 123456', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Fill it for me', exact: true })).toBeEnabled();
-  await mkdir('artifacts/f2/accepted', { recursive: true });
-  await page.screenshot({ path: 'artifacts/f2/accepted/report-save-otp.png' });
+  await mkdir(artifactPath('f2', 'accepted'), { recursive: true });
+  await page.screenshot({ path: artifactPath('f2', 'accepted', 'report-save-otp.png') });
   await page.setViewportSize({ width: 390, height: 844 });
   for (const box of await page.locator('.otp-boxes input').all()) {
     const bounds = await box.boundingBox();
     expect(bounds!.width).toBeGreaterThanOrEqual(48);
     expect(bounds!.height).toBeGreaterThanOrEqual(48);
   }
-  await page.screenshot({ path: 'artifacts/f2/accepted/report-save-otp-mobile.png' });
+  await page.screenshot({ path: artifactPath('f2', 'accepted', 'report-save-otp-mobile.png') });
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.getByRole('button', { name: 'Fill it for me', exact: true }).click();
   await page.getByRole('button', { name: 'Verify & continue', exact: true }).click();
@@ -76,7 +77,7 @@ test('guest report reaches Save before OTP, then creates a cookie-owned case', a
   expect(storage).not.toContain('123456');
   await page.goto('/cases');
   await expect(page.locator('.case-list-card')).toHaveCount(1);
-  await page.screenshot({ path: 'artifacts/f2/accepted/my-cases.png' });
+  await page.screenshot({ path: artifactPath('f2', 'accepted', 'my-cases.png') });
   await page.getByLabel(/^Account/).click();
   await page.getByRole('button', { name: 'Log out', exact: true }).click();
   await expect(page).toHaveURL('/');

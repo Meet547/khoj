@@ -2,7 +2,7 @@
 
 Created with the built-in image-generation tool specifically for the KHOJ agent demo. None depicts a real missing person. No input photograph or face-matching model was used.
 
-Final project assets: `public/sample-people/adult.png`, `adult.webp`, `child.png`, `child.webp`, `senior.png`, and `senior.webp`. Original images are 1448 × 1086 pixels, each containing a strict 4-column × 3-row grid of twelve portraits (six fictional people in two views). Optimized WebP copies preserve the originals. `src/features/search/AgentSearch.tsx` displays cells in SVG viewports; images are not individually edited.
+Final project assets: `frontend/public/sample-people/adult.png`, `adult.webp`, `child.png`, `child.webp`, `senior.png`, and `senior.webp`. Original images are 1448 × 1086 pixels, each containing a strict 4-column × 3-row grid of twelve portraits (six fictional people in two views). Optimized WebP copies preserve the originals. `frontend/src/features/search/AgentSearch.tsx` displays cells in SVG viewports; images are not individually edited.
 
 ## Final prompt set
 

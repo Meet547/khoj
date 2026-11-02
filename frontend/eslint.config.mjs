@@ -6,14 +6,7 @@ const noNetwork = {
 };
 export default [
   {
-    ignores: [
-      'node_modules/**',
-      '.next/**',
-      'public/**',
-      'khoj-backend/**',
-      'artifacts/**',
-      'next-env.d.ts',
-    ],
+    ignores: ['node_modules/**', '.next/**', 'public/**', 'next-env.d.ts'],
   },
   ...nextTs,
   {

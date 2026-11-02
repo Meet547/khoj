@@ -1,8 +1,13 @@
 # KHOJ: phased Codex prompts
 
-How to use: open a fresh Codex session per phase. Paste the matching **preamble** first, then the phase prompt. Attach `ARCHITECTURE.md` (backend phases) or the screenshots (frontend phases). Run each phase's checks yourself before starting the next. Prompts are inside `~~~` fences so you can copy them whole.
+> Historical implementation plan. Frontend paths/commands in these tasks are relative to
+> `frontend/` following the repository reorganization. See [project status](project-status.md)
+> for completed phases and remaining gates; task text alone does not establish completion.
 
-Order: B0 → F0 → F1 → F2 → B1 → B2 → F3 → B3 → B4 → F4 → B5 → F5 → B6 → F6. Backend and frontend phases with the same number can run in parallel once the API contract in `ARCHITECTURE.md` section 13 is agreed.
+
+How to use: open a fresh Codex session per phase. Paste the matching **preamble** first, then the phase prompt. Attach `architecture.md` (backend phases) or the screenshots (frontend phases). Run each phase's checks yourself before starting the next. Prompts are inside `~~~` fences so you can copy them whole.
+
+Order: B0 → F0 → F1 → F2 → B1 → B2 → F3 → B3 → B4 → F4 → B5 → F5 → B6 → F6. Backend and frontend phases with the same number can run in parallel once the API contract in `architecture.md` section 13 is agreed.
 
 ---
 
@@ -48,7 +53,7 @@ You are a senior frontend engineer on KHOJ (खोज), a voice-first web app th
 
 Context
 - Users: worried families and passers-by, often on low-end Android phones, often more comfortable in Hindi or a regional language than English. Many will use voice.
-- The app has a real backend (see docs/ARCHITECTURE.md section 13 for the API). Until it is ready, all network calls go through ONE typed client (src/lib/api/client.ts) with a mock implementation (MSW) toggled by NEXT_PUBLIC_USE_MOCK=1.
+- The app has a real backend (see docs/architecture.md section 13 for the API). Until it is ready, all network calls go through ONE typed client (src/lib/api/client.ts) with a mock implementation (MSW) toggled by NEXT_PUBLIC_USE_MOCK=1.
 - Keep the existing stack and visual language already in this repo (warm cream background, black line illustrations, one salmon accent, serif display + sans body). Inspect the repo first; do not rewrite what already works.
 - Safety rules the UI must always enforce: (1) never claim certainty ("possible match, an officer will review it", never "we found your child"); (2) never show percentages, only Strong/Possible/Weak with reasons; (3) read-back confirmation is mandatory before saving; (4) critical sentences (112/Childline 1098 notice, read-back frame, match wording) come from translation files, never from model output; (5) render all API text as plain text, never as HTML; (6) no secrets, no direct calls to Gnani or Ollama from the browser; (7) no analytics on photos or transcripts.
 - Quality bar: TypeScript strict, no `any`, accessible (WCAG AA, 48px tap targets, visible focus, aria-live for assistant output), keyboard usable, works at 360px width, respects prefers-reduced-motion, Lighthouse mobile perf ≥ 90 and a11y 100.
@@ -107,7 +112,7 @@ tests/            unit (vitest), e2e (playwright)
 
 Requirements
 - Extract every color, radius, spacing and font value into tokens.css as CSS variables; components use tokens only.
-- lib/api/types.ts defines zod schemas for every endpoint in docs/ARCHITECTURE.md section 13 (session, turn, draft/edit, photos, confirm, search, case, auth). Infer TS types from zod. client.ts validates every response with zod and maps errors to a typed AppError {code, message, retryable}.
+- lib/api/types.ts defines zod schemas for every endpoint in docs/architecture.md section 13 (session, turn, draft/edit, photos, confirm, search, case, auth). Infer TS types from zod. client.ts validates every response with zod and maps errors to a typed AppError {code, message, retryable}.
 - MSW mock handlers for all endpoints with realistic latency (STT 1.5s, turn 2s, search 3s) and scenario switches via query param ?mock=empty|error|slow|lowconfidence|micdenied.
 - Env: NEXT_PUBLIC_USE_MOCK, NEXT_PUBLIC_DEMO, NEXT_PUBLIC_API_BASE (empty = same origin).
 - Add vitest unit tests for api client error mapping, zod schemas, and the language preference helper; Playwright smoke test that / loads and the language sheet works.
@@ -239,7 +244,7 @@ Acceptance: the full missing-person flow works in Chrome (Android emulation) and
 ## Backend preamble (paste first in every B-phase session)
 
 ~~~text
-You are a senior backend/ML-systems engineer building the KHOJ backend (khoj-backend/). Read docs/ARCHITECTURE.md fully before writing code; it is the source of truth. The repo already contains tested adapters: app/integrations/gnani.py, app/integrations/ollama.py, app/llm.py, app/privacy.py, app/schemas.py (evidence-grounded extraction), app/audio.py (ffmpeg), config/models.yaml, and a prototype ZIPNET crawler (app/crawler.py, app/parse.py, app/search.py, app/service.py). Reuse them; do not rewrite.
+You are a senior backend/ML-systems engineer building the KHOJ backend (khoj-backend/). Read docs/architecture.md fully before writing code; it is the source of truth. The repo already contains tested adapters: app/integrations/gnani.py, app/integrations/ollama.py, app/llm.py, app/privacy.py, app/schemas.py (evidence-grounded extraction), app/audio.py (ffmpeg), config/models.yaml, and a prototype ZIPNET crawler (app/crawler.py, app/parse.py, app/search.py, app/service.py). Reuse them; do not rewrite.
 
 Non-negotiables
 - The LLM understands and explains. It NEVER decides a match and NEVER sends an alert. Matching is SQL + Python. send_alert is callable only from policy.gate.
@@ -257,9 +262,9 @@ Non-negotiables
 ~~~text
 Task: build the production foundation. Do not build conversational or matching logic yet.
 
-1. Project layout exactly as docs/ARCHITECTURE.md section 2. pyproject.toml, ruff, mypy (strict for app/), pre-commit.
+1. Project layout exactly as docs/architecture.md section 2. pyproject.toml, ruff, mypy (strict for app/), pre-commit.
 2. app/config.py: typed Settings (pydantic-settings) for all env vars in section 16; production guard that refuses to start if KHOJ_ENV=production and DEMO_AUTH=1; .env.example (no real secrets).
-3. Database: SQLAlchemy 2 async models + Alembic migration 0001 implementing the DDL in docs/ARCHITECTURE.md section 11 (create extensions pg_trgm and pgcrypto; add pgvector only if available, behind a flag). Repository layer in app/db/repo/ with an `audit()` call baked into any read/write of persons with access_class != 'public_summary'. Seed script for gazetteer stub, scoring_versions v1 (placeholder weights) and demo users.
+3. Database: SQLAlchemy 2 async models + Alembic migration 0001 implementing the DDL in docs/architecture.md section 11 (create extensions pg_trgm and pgcrypto; add pgvector only if available, behind a flag). Repository layer in app/db/repo/ with an `audit()` call baked into any read/write of persons with access_class != 'public_summary'. Seed script for gazetteer stub, scoring_versions v1 (placeholder weights) and demo users.
 4. Case number generator KHJ-YYYY-NNNNN from a Postgres sequence (gap-free not required).
 5. Demo auth per section 12: /api/auth/otp/send, /otp/verify, /logout, /me. Demo mode accepts valid Indian mobile numbers (^[6-9]\d{9}$) with OTP 123456; seeded role accounts 9000000001..4. Phone stored as HMAC hash (lookup) + encrypted value (AES-GCM via cryptography). Access JWT 15min + rotating refresh token in httpOnly Secure SameSite=Lax cookies; JWT holds sub and role only. Rate limits: 5 sends/hour/phone and 10 verifies/hour/phone and per-IP, via Redis. OtpProvider interface with DemoOtpProvider now.
 6. deps.py: get_db, get_current_user (optional), require_role(role). Error model {error:{code,message,retryable}} with exception handlers. Request-id middleware. /api/health (db + redis ping).
@@ -288,7 +293,7 @@ Acceptance: I run scripts/smoke_live.py with real keys and it prints a Hindi tra
 ## B2: Intake pipeline (LangGraph)
 
 ~~~text
-Task: implement the conversational intake pipeline exactly as docs/ARCHITECTURE.md sections 5, 6, 7.
+Task: implement the conversational intake pipeline exactly as docs/architecture.md sections 5, 6, 7.
 
 1. app/graph/state.py: IntakeState (TypedDict) as in section 6. FieldState {value, evidence, source_turn, confidence: high|confirm, confirmed}.
 2. Prompts in app/graph/prompts/*.md (versioned, loaded at startup, hash recorded in traces): turn-analysis system prompt in English with instructions to output only the Extraction schema; user text wrapped in <user_message>...</user_message> and declared as untrusted data; value in plain English, evidence copied verbatim; never infer. Few-shot examples in Hindi, Hinglish, Marathi and English.
@@ -306,7 +311,7 @@ Acceptance: a recorded demo (script) runs a full Hindi conversation with the fak
 ## B3: Ingestion (ZIPNET into the database)
 
 ~~~text
-Task: productionize ingestion per docs/ARCHITECTURE.md section 8. Start by reading fixtures/discovery.json and fixtures/table.html if they exist (output of scripts/inspect_zipnet.py). If a direct JSON endpoint was discovered, implement the connector with httpx (preferred, faster, gentler). Otherwise keep the Playwright approach from app/crawler.py. If neither fixture exists, stop and tell me to run the inspector first.
+Task: productionize ingestion per docs/architecture.md section 8. Start by reading fixtures/discovery.json and fixtures/table.html if they exist (output of scripts/inspect_zipnet.py). If a direct JSON endpoint was discovered, implement the connector with httpx (preferred, faster, gentler). Otherwise keep the Playwright approach from app/crawler.py. If neither fixture exists, stop and tell me to run the inspector first.
 
 1. app/ingest/connectors/base.py (Connector protocol: slices(), fetch(slice), parse(raw)) and zipnet.py implementing it for the three ZIPNET sections: Missing Persons, Un-Identified Persons Found, Un-Identified Dead Bodies (access_class officer_only, never exposed to citizens).
 2. Slicing: state x district x report-date month; resumable via crawl_runs; checkpoint after each slice. Initial backfill mode and nightly incremental mode (only recent report dates) plus a weekly full re-check of open records.
@@ -325,7 +330,7 @@ Acceptance: running the backfill for one state populates persons; a second run r
 ## B4: Matching engine and search from the database
 
 ~~~text
-Task: implement docs/ARCHITECTURE.md section 9. All scoring is deterministic code.
+Task: implement docs/architecture.md section 9. All scoring is deterministic code.
 
 1. app/matching/blocking.py: SQL blocking (kind pairing, event date ordering, gender wildcard, age overlap widened by elapsed time, state/gazetteer radius growing with time, pg_trgm candidate pull on marks_text/place_text). Return <= 200 candidates.
 2. features.py: name similarity using person_names variants + phonetic keys; language overlap; height/build/complexion/hair compatibility with tolerance; conditions; clothing tokens (low weight); place/time feasibility; each feature returns value in [-1,1] plus a human-readable reason key.
@@ -343,7 +348,7 @@ Acceptance: on the seeded set, report recall@5 and Strong-tier precision; every 
 ## B5: Cases, watch, policy gate, review queue, demo outbox
 
 ~~~text
-Task: implement docs/ARCHITECTURE.md sections 10 and 11 (release path).
+Task: implement docs/architecture.md sections 10 and 11 (release path).
 
 1. Cases: GET /api/case/{caseNo} (owner only): status, localized timeline from case_events (text_key + params), watch counters (last_checked_at, records_checked), pendingReview count. GET /api/cases (owner's list). POST /api/search/watch creates a watch from a saved search.
 2. Watches: nightly job updates last_checked_at and records_checked and appends "checked" events at most weekly (no spam).

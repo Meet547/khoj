@@ -1,7 +1,8 @@
 import { chromium, expect } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { artifactPath } from './paths.mjs';
 const base = process.env.E2E_BASE_URL || 'http://localhost:3000';
-const directory = process.env.SCREENSHOT_DIR || 'artifacts/f0/accepted';
+const directory = process.env.SCREENSHOT_DIR || artifactPath('f0', 'accepted');
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch();
 const checks = [];

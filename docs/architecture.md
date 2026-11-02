@@ -1,7 +1,7 @@
 # KHOJ backend architecture
 
 Status: design v1. Sections 3 and 4 are verified against the Gnani and Ollama documentation. Everything else is design intent.
-Companion file: `CODEX_PROMPTS.md` (phased build prompts).
+Companion file: `phase-plan.md` (phased build prompts).
 
 ---
 
@@ -564,7 +564,7 @@ Vercel: `NEXT_PUBLIC_API_BASE` is empty (same-origin); `vercel.json` rewrites `/
 
 ---
 
-## 18. Build phases (matches `CODEX_PROMPTS.md`)
+## 18. Build phases (matches `phase-plan.md`)
 
 | Phase | Deliverable | Exit criteria |
 |---|---|---|

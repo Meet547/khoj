@@ -1,6 +1,7 @@
 import { chromium, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { artifactPath } from './paths.mjs';
 const base = process.env.E2E_BASE_URL || 'http://localhost:3001';
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
@@ -42,7 +43,7 @@ for (const route of ['/', '/report/missing', '/search', '/login']) {
   }
 }
 await browser.close();
-await mkdir('artifacts/quality', { recursive: true });
-await writeFile('artifacts/quality/axe-verified.json', JSON.stringify(results, null, 2));
+await mkdir(artifactPath('quality'), { recursive: true });
+await writeFile(artifactPath('quality', 'axe-verified.json'), JSON.stringify(results, null, 2));
 console.log(JSON.stringify(results, null, 2));
 if (results.some((r) => r.violations.length)) process.exitCode = 1;

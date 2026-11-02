@@ -1,11 +1,13 @@
 # KHOJ backend — B0 foundation + B1 gateway + B2 intake
 
-This directory is the working copy of the supplied backend. The source in Downloads is unchanged.
-The implementation follows [the architecture](../docs/ARCHITECTURE.md) and
-[the phase prompts](../docs/CODEX_PROMPTS.md). B1 adds stateless speech and grounded extraction
+This directory owns the FastAPI application, its operational tools, migrations and evaluation inputs.
+See [current project status](../docs/project-status.md) for the latest readiness; the B0 checkpoint
+below is retained as historical evidence.
+The implementation follows [the architecture](../docs/architecture.md) and
+[the phase prompts](../docs/phase-plan.md). B1 adds stateless speech and grounded extraction
 to B0's authentication and dependency health. The ZIPNET crawler and matching code remain
 private. B2 adds durable LangGraph intake, authenticated confirmation, and atomic case filing.
-See [B2 intake: API, deployment, demo and evals](../docs/B2_INTAKE.md).
+See [B2 intake: API, deployment, demo and evals](../docs/intake.md).
 
 ## B1 gateway
 
@@ -184,7 +186,7 @@ PostgreSQL and Redis and returns 503 if either is unavailable.
 B0 implementation is ready for its remaining Compose acceptance gate. Do not label this phase
 fully accepted until `make up` and the login check pass on Docker. Per the user's instruction,
 frontend F0 → F1 → F2 proceeded independently of this runtime gate. See
-`../docs/FRONTEND_PHASES.md` for frontend verification. Remaining implementation order:
+`../docs/frontend-checkpoints.md` for frontend verification. Remaining implementation order:
 F3 → B3 → B4 → F4 → B5 → F5 → B6 → F6.
 
 ## Inputs for later phases

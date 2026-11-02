@@ -36,4 +36,4 @@ and Postgres interrupt recovery are covered by the suite. R2 uses mocked transpo
 these local demos used the local development cache. Production still blocks eight
 `needs_review` language translations. No Docker runtime or hosted CI run was performed here.
 
-Reproduction commands and deployment details: [B2 intake guide](../../docs/B2_INTAKE.md).
+Reproduction commands and deployment details: [B2 intake guide](../../docs/intake.md).

@@ -1,0 +1,43 @@
+needs_review: false
+review: Engineering wording review; no promise of a match or automatic notification.
+labels:
+  name: Name
+  relation: Relationship
+  gender: Gender
+  age: Age
+  height: Height
+  build: Build
+  complexion: Complexion
+  hair: Hair
+  marks: Distinctive marks
+  language: Language
+  clothing: Clothing
+  last_seen_place: Last seen place
+  last_seen_time: Last seen time
+  conditions: Other stated details
+questions:
+  marks: Are there any distinctive scars or marks?
+  gender: What gender did the person state or what gender do you know?
+  age: How old is the person? An estimate is fine.
+  last_seen_place: Where was the person last seen?
+  language: Which languages does the person speak?
+  clothing: What was the person wearing?
+welcome: Please describe the missing or found person in your own words.
+confirm: Is this information correct? Please confirm to save, or tell me what to change.
+emergency: If someone is in immediate danger, call 112. For a child in crisis, call
+  1098. KHOJ cannot dispatch emergency help.
+cancel: This intake has been cancelled. No case has been saved.
+help: Describe what you know about the person. You can skip any question. A case is
+  saved only after you confirm and sign in.
+empty: I could not hear any words. Please try a shorter recording or type your message.
+readback_intro: Please check the details you provided.
+readback_item: '{field}: {value}.'
+clarify: I heard different values for {field}. Please state the correct value, or
+  edit it below.
+saved: Your case {case_no} has been saved. Matching is queued for review.
+errors:
+  model: I could not understand that message right now. Please try again.
+  auth: Please sign in to save this case.
+  consent: Please confirm the details and agree to save this case.
+  conflict: Please resolve the conflicting details before saving.
+  closed: This intake is no longer open. Please start a new session.

@@ -1,0 +1,2 @@
+# Same dependency source as CI and Docker.
+-e .

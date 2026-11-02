@@ -1,0 +1,40 @@
+needs_review: true
+review: Machine translated; human review required before production.
+labels:
+  name: નામ
+  relation: સંબંધ
+  gender: લિંગ
+  age: ઉંમર
+  height: ઊંચાઈ
+  build: બાંધો
+  complexion: રંગ
+  hair: વાળ
+  marks: ખાસ નિશાન
+  language: ભાષા
+  clothing: કપડાં
+  last_seen_place: છેલ્લે જોયેલું સ્થળ
+  last_seen_time: છેલ્લે જોયાનો સમય
+  conditions: અન્ય માહિતી
+questions:
+  marks: કોઈ ખાસ નિશાન છે?
+  gender: જાણતા હો તો લિંગ જણાવો.
+  age: ઉંમર કેટલી છે?
+  last_seen_place: છેલ્લે ક્યાં જોયા હતા?
+  language: કઈ ભાષા બોલે છે?
+  clothing: કયા કપડાં પહેર્યા હતા?
+welcome: ગુમ થયેલી અથવા મળેલી વ્યક્તિ વિશે જણાવો.
+confirm: માહિતી સાચી છે? સાચવવા ખાતરી કરો.
+emergency: તાત્કાલિક જોખમમાં 112 પર ફોન કરો. સંકટમાં બાળક માટે 1098 પર ફોન કરો.
+cancel: વાતચીત રદ થઈ છે. કેસ સાચવ્યો નથી.
+help: જે જાણો તે કહો. કોઈ પ્રશ્ન છોડી શકો છો.
+empty: શબ્દો સંભળાયા નથી. ફરી બોલો અથવા લખો.
+readback_intro: માહિતી તપાસો.
+readback_item: '{field}: {value}.'
+clarify: '{field} વિશે અલગ માહિતી મળી છે. સાચી માહિતી જણાવો અથવા સુધારો.'
+saved: તમારો કેસ {case_no} સાચવાયો છે. મેળની સમીક્ષા માટે કતારમાં છે.
+errors:
+  model: સંદેશ સમજાયો નથી. ફરી પ્રયાસ કરો.
+  auth: સાચવવા સાઇન ઇન કરો.
+  consent: માહિતીની ખાતરી કરો અને સાચવવાની સંમતિ આપો.
+  conflict: સાચવતાં પહેલાં વિરોધાભાસી માહિતી સુધારો.
+  closed: સત્ર બંધ થયું છે. નવું સત્ર શરૂ કરો.

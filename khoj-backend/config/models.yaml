@@ -1,0 +1,28 @@
+# Role -> model routing. Change this file, not code. Every model must pass evals/ before it is added to a role.
+# Verified on Ollama Cloud: gpt-oss (text, tools, thinking), gemma4:31b (vision, tools, thinking, multilingual),
+# nemotron-3-nano:30b / nemotron-3-super (text, tools, thinking). `beam` is unverified: NOT assigned to any role.
+attempt_timeout_seconds: 6
+privacy:
+  redact_before_cloud: true      # phone, Aadhaar, email are masked before any LLM call
+roles:
+  turn:      {primary: gpt-oss:20b,  fallback: [gemma4:31b, gpt-oss:120b], temperature: 0, think: low, think_by_model: {"gemma4:31b": false}, budget: {calls: 10000, tokens: 2000000}}   # intent + field extraction, English path
+  vision:    {primary: gemma4:31b,   fallback: [],                          temperature: 0, budget: {calls: 10000, tokens: 2000000}}              # clothing / marks / scene only, never identity
+  compare:   {primary: gpt-oss:120b, fallback: [nemotron-3-super],          temperature: 0, think: medium, budget: {calls: 500, tokens: 500000}} # free-text mark comparison on shortlisted pairs
+  explain:   {primary: gpt-oss:120b, fallback: [gemma4:31b],                temperature: 0.2, budget: {calls: 1000, tokens: 500000}}              # officer-facing rationale from signal breakdown only
+  normalize: {primary: gpt-oss:20b,  fallback: [gemma4:31b],                temperature: 0, budget: {calls: 10000, tokens: 2000000}}              # ingestion: portal free text -> schema
+  judge:     {primary: nemotron-3-super, fallback: [gpt-oss:120b],          temperature: 0, budget: {calls: 10000, tokens: 2000000}}              # offline evals only
+# Indic-language turns go to the multilingual model first. Confirm with evals before trusting it.
+language_overrides:
+  hi: {turn: gemma4:31b}
+  mr: {turn: gemma4:31b}
+  bn: {turn: gemma4:31b}
+  ta: {turn: gemma4:31b}
+  te: {turn: gemma4:31b}
+  kn: {turn: gemma4:31b}
+  ml: {turn: gemma4:31b}
+  gu: {turn: gemma4:31b}
+  pa: {turn: gemma4:31b}
+
+# Daily UTC budgets count every provider attempt, including retries and schema repairs.
+# compare/explain stop making calls at either threshold; essential roles continue degraded.
+# Set enabled: false on a role to disable it explicitly. -1 means no limit.

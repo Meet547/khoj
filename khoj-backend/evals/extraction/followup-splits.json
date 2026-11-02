@@ -1,0 +1,9 @@
+{
+  "policy": "Prompts, schemas, labels, scoring aliases and split membership frozen before first follow-up provider run. No heldout-driven tuning. Historical seed is development only.",
+  "files": {
+    "development.v2.jsonl": "188a54e11c14fecc62dfa0d5bd64913d189f3d0a95e2ff9d85c09da88a552dcc",
+    "heldout.v1.jsonl": "d7fc8665bd13a01b48465d6ef928ce655a9c5009a0b4a1bd34489aec2d97ff60",
+    "benchmark.v1.jsonl": "4960c7bca8b6618f109b408cd7344eb2a42392ab9a9ff7a5fc9a6c8dfc2250c9"
+  },
+  "prompt_hash": "a12f2f3e2f7e2c78b24ca7ef5627872851997e7e4c928c38cb672d70b80394e8"
+}

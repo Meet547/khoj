@@ -1,0 +1,40 @@
+needs_review: true
+review: Machine translated; human review required before production.
+labels:
+  name: নাম
+  relation: সম্পর্ক
+  gender: লিঙ্গ
+  age: বয়স
+  height: উচ্চতা
+  build: গঠন
+  complexion: গায়ের রং
+  hair: চুল
+  marks: বিশেষ দাগ
+  language: ভাষা
+  clothing: পোশাক
+  last_seen_place: শেষ দেখা স্থান
+  last_seen_time: শেষ দেখা সময়
+  conditions: অন্য তথ্য
+questions:
+  marks: কোনো বিশেষ দাগ আছে?
+  gender: লিঙ্গ জানা থাকলে বলুন।
+  age: ব্যক্তির বয়স কত?
+  last_seen_place: শেষ কোথায় দেখা গিয়েছিল?
+  language: কোন ভাষায় কথা বলেন?
+  clothing: কী পোশাক পরা ছিল?
+welcome: নিখোঁজ বা পাওয়া ব্যক্তি সম্পর্কে বলুন।
+confirm: তথ্য ঠিক আছে? সংরক্ষণ করতে নিশ্চিত করুন।
+emergency: তাৎক্ষণিক বিপদে 112 কল করুন। বিপন্ন শিশুর জন্য 1098 কল করুন।
+cancel: কথোপকথন বাতিল হয়েছে। কোনো কেস সংরক্ষিত হয়নি।
+help: যা জানেন বলুন। যেকোনো প্রশ্ন এড়াতে পারেন।
+empty: কথা শোনা যায়নি। আবার বলুন বা লিখুন।
+readback_intro: তথ্য যাচাই করুন।
+readback_item: '{field}: {value}।'
+clarify: '{field} সম্পর্কে ভিন্ন তথ্য পেয়েছি। সঠিক তথ্য বলুন বা সংশোধন করুন।'
+saved: আপনার কেস {case_no} সংরক্ষিত হয়েছে। মিল পর্যালোচনার জন্য সারিতে আছে।
+errors:
+  model: বার্তা বুঝতে পারিনি। আবার চেষ্টা করুন।
+  auth: সংরক্ষণ করতে সাইন ইন করুন।
+  consent: তথ্য নিশ্চিত করুন এবং সংরক্ষণের সম্মতি দিন।
+  conflict: সংরক্ষণের আগে বিরোধপূর্ণ তথ্য ঠিক করুন।
+  closed: সেশন বন্ধ হয়েছে। নতুন সেশন শুরু করুন।

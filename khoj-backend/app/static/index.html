@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KHOJ | Search police records</title>
+<style>
+:root{--bg:#fff;--surface:#f5f7fb;--ink:#12213b;--muted:#5b667a;--line:#dde3ee;--brand:#233a8f;--on:#fff;--lamp:#f0a500}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1626;--surface:#172138;--ink:#eaf0fb;--muted:#a3afc6;--line:#2a3652;--brand:#7f98f0;--on:#0f1626}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Hind,system-ui,sans-serif}
+main{max-width:820px;margin:0 auto;padding:24px 18px 60px}h1{margin:0 0 4px;font-size:30px}
+.sub{color:var(--muted);margin:0 0 18px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+form .full{grid-column:1/-1}input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+button{border:0;border-radius:10px;padding:12px 18px;font:600 17px inherit;background:var(--brand);color:var(--on);cursor:pointer}
+button:disabled{opacity:.6}.meta{color:var(--muted);font-size:15px;margin:16px 0 4px}
+.card{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;margin-top:12px}
+.card img{width:84px;height:84px;object-fit:cover;border-radius:10px;background:var(--surface)}
+.chip{display:inline-block;border-radius:999px;padding:1px 10px;font-size:14px;font-weight:600;background:var(--surface);margin-right:8px}
+.card ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:15px}.err{color:#a4262c;margin-top:14px}
+@media (max-width:600px){form{grid-template-columns:1fr}}
+</style></head><body><main>
+<h1>खोज KHOJ</h1><p class="sub">Search the ZIPNET police portal by description. Phase 1 test page.</p>
+<form id="f">
+ <select id="state" required><option value="">State</option></select>
+ <input id="district" placeholder="District (optional)">
+ <select id="status"><option>Untraced</option><option>Traced</option><option value="">Any</option></select>
+ <select id="gender"><option value="">Gender (any)</option><option>male</option><option>female</option></select>
+ <input class="full" id="q" placeholder="Describe: boy, red shirt, scar on eyebrow, bhayandar">
+ <button class="full" id="go">Search police records</button>
+</form>
+<div id="meta" class="meta"></div><div id="err" class="err"></div><div id="out"></div>
+<script>
+const S=["CHANDIGARH","DELHI","HARYANA","HIMACHAL PRADESH","PUNJAB","RAJASTHAN","UTTAR PRADESH","UTTRAKHAND"];
+const $=i=>document.getElementById(i);
+S.forEach(s=>{const o=document.createElement("option");o.textContent=s;o.value=s;$("state").append(o)});
+function el(t,txt,cls){const e=document.createElement(t);if(txt!=null)e.textContent=txt;if(cls)e.className=cls;return e}
+$("f").onsubmit=async e=>{e.preventDefault();$("go").disabled=true;$("err").textContent="";$("out").replaceChildren();
+ $("meta").textContent="Checking the police portal. This can take up to a minute…";
+ try{
+  const r=await fetch("/api/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+   query:$("q").value,filters:{state:$("state").value,district:$("district").value||null,status:$("status").value||null,gender:$("gender").value||null}})});
+  const d=await r.json();if(!r.ok)throw new Error(d.detail||"Request failed");
+  $("meta").textContent=`${d.hits.length} shown from ${d.scanned} records (${d.source}, checked ${new Date(d.checked_at).toLocaleString()}). ${d.note||""}`;
+  d.hits.forEach(h=>{const r=h.record,c=el("div",null,"card"),img=el("img");
+   if(r.image_url){img.src=r.image_url;img.referrerPolicy="no-referrer";img.alt="Photo from police record";img.onerror=()=>img.remove()}
+   const b=el("div");const t=el("div");t.append(el("span",h.band,"chip"),el("b",`${r.place||"Place not given"}`));
+   b.append(t,el("div",`${r.police_station}, ${r.district}, ${r.state}. Missing since ${r.dd_date||"unknown"}. ${r.status}.`));
+   const ul=el("ul");h.reasons.forEach(x=>ul.append(el("li",x)));Object.entries(r.details).slice(0,5).forEach(([k,v])=>ul.append(el("li",`${k}: ${v}`)));
+   b.append(ul);c.append(img,b);$("out").append(c)});
+  if(d.hits.length)$("out").append(el("p",d.disclaimer,"meta"));
+ }catch(x){$("meta").textContent="";$("err").textContent=x.message}
+ $("go").disabled=false};
+</script></main></body></html>

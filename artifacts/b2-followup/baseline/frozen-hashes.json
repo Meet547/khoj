@@ -1,0 +1,6 @@
+{
+  "khoj-backend/app/graph/prompts/vision.v1.md": "413543772032bd414f1f24027376535754fda46331e86d3f884f857d27fb21cf",
+  "khoj-backend/app/graph/prompts/turn-analysis.v1.md": "a12f2f3e2f7e2c78b24ca7ef5627872851997e7e4c928c38cb672d70b80394e8",
+  "khoj-backend/app/schemas.py": "17f3a70cb4e489eb27ec2e74d69702a406df8e208d5a94fefe18002204fd1da2",
+  "khoj-backend/app/api/gateway.py": "49cd242b6bc60e17a469c8895533cbcced85919dd307a676ce70ba1e91bc2f49"
+}

@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     refresh_ttl_seconds: int = Field(default=2_592_000, ge=900)
     allowed_origins: str = "http://localhost:3000,https://localhost:3000"
     enable_pgvector: bool = False
+    extraction_schema: Literal["v1", "v2"] = "v1"
     ollama_base: str = "https://ollama.com"
     ollama_key: SecretStr = Field(default=SecretStr(""), validation_alias="OLLAMA_API_KEY")
     gnani_base: str = "https://api.vachana.ai"

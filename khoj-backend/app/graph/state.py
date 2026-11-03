@@ -22,6 +22,7 @@ class IntakeState(TypedDict):
     extraction: NotRequired[dict[str, Any]]
     kept: NotRequired[list[dict[str, Any]]]
     ungrounded: NotRequired[list[dict[str, Any]]]
+    age_grounding_drop: NotRequired[Literal["quote_missing", "number_missing"] | None]
     conflicts: NotRequired[dict[str, FieldState]]
     gaps: NotRequired[list[str]]
     next_field: NotRequired[str | None]

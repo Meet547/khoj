@@ -553,3 +553,40 @@ async def test_failed_timeout_attempts_are_persisted_without_new_schema(
             assert len(row.models["attempts"]) == 3
             assert all(a["outcome"] == "timeout" for a in row.models["attempts"])
             assert all("timeout" in item for item in row.models["trail"])
+
+
+async def test_usage_reserve_failure_is_safe_and_does_not_record_turn(
+    intake_apps, database, monkeypatch, capsys
+):
+    from redis.exceptions import ConnectionError
+
+    async with intake_apps() as g:
+        sid = await start(g, "en")
+        reserve_calls = []
+
+        async def unavailable(role):
+            reserve_calls.append(role)
+            raise ConnectionError("private-ledger-internal-test-marker")
+
+        monkeypatch.setattr(g.app.state.usage, "reserve", unavailable)
+        before = (g.behavior["llm_calls"], g.behavior["tts_calls"])
+        response = await g.client.post(
+            "/api/turn",
+            data={"sessionId": sid, "text": "My brother is missing."},
+            headers={"Idempotency-Key": "ledger-outage"},
+        )
+        assert reserve_calls == ["turn"]
+        assert (g.behavior["llm_calls"], g.behavior["tts_calls"]) == before
+        async with database() as db:
+            assert await db.scalar(select(func.count()).select_from(Turn)) == 0
+        assert response.status_code == 503
+        events = [json.loads(line)["event"] for line in capsys.readouterr().err.splitlines()]
+        assert "redis_unavailable" in events
+        assert all("private-ledger-internal-test-marker" not in event for event in events)
+        assert response.json() == {
+            "error": {
+                "code": "temporarily_unavailable",
+                "message": "Please try again in a moment.",
+                "retryable": True,
+            }
+        }

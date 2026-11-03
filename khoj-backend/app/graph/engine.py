@@ -1,7 +1,8 @@
+import hashlib
 import logging
 import time
 from collections.abc import Awaitable, Callable
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
@@ -12,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from app.core.errors import AppError
 from app.db.models import Turn
 from app.db.repo.intake import IntakeRepository
+from app.graph.age_v2 import AGE_INSTRUCTIONS, ExtractionV2, ground_age
 from app.graph.resources import FIELDS, Resources
 from app.graph.state import FieldState, IntakeState
 from app.graph.triage import SKIP, triage
@@ -28,8 +30,16 @@ class IntakeNodes:
         resources: Resources,
         factory: async_sessionmaker[AsyncSession],
         enqueue: Callable[[str], Awaitable[bool]],
+        extraction_schema: Literal["v1", "v2"] = "v1",
     ):
         self.llm, self.resources, self.factory, self.enqueue = llm, resources, factory, enqueue
+        self.extraction_schema = extraction_schema
+        self.prompt_hash = resources.hashes["turn-analysis"]
+        if extraction_schema == "v2":
+            self.age_prompt_suffix = "\n\n" + AGE_INSTRUCTIONS
+            self.prompt_hash = hashlib.sha256(
+                (resources.prompts["turn-analysis"] + self.age_prompt_suffix).encode()
+            ).hexdigest()
 
     def load_draft(self, state: IntakeState) -> dict[str, Any]:
         current = state["current"]
@@ -45,13 +55,14 @@ class IntakeNodes:
             "extraction": {},
             "kept": [],
             "ungrounded": [],
+            **({"age_grounding_drop": None} if self.extraction_schema == "v2" else {}),
             "reply": "",
             "model": "",
             "trail": [],
             "attempts": [],
             "llm_ms": 0,
             "degraded": False,
-            "prompt_hash": self.resources.hashes["turn-analysis"],
+            "prompt_hash": self.prompt_hash,
         }
 
     def safety_reply(self, state: IntakeState) -> dict[str, Any]:
@@ -77,11 +88,16 @@ class IntakeNodes:
         if SKIP.fullmatch(current["text"]):
             return {"extraction": Extraction(intent="skip").model_dump()}
         started = time.monotonic()
+        messages = self.resources.messages(current["text"], state["draft"], state.get("next_field"))
+        schema_model: type[Extraction] = Extraction
+        if self.extraction_schema == "v2":
+            schema_model = ExtractionV2
+            messages[0]["content"] += self.age_prompt_suffix
         try:
             result = await self.llm.run(
                 "turn",
-                self.resources.messages(current["text"], state["draft"], state.get("next_field")),
-                schema_model=Extraction,
+                messages,
+                schema_model=schema_model,
                 lang=state["lang"],
             )
         except LLMUnavailable as exc:
@@ -113,14 +129,27 @@ class IntakeNodes:
         }
 
     def ground(self, state: IntakeState) -> dict[str, Any]:
-        kept, dropped = ground(
-            state["current"]["text"], Extraction.model_validate(state["extraction"])
-        )
+        text = state["current"]["text"]
+        raw = state["extraction"]
+        extraction = Extraction.model_validate(raw)
+        age_drop = None
+        if self.extraction_schema == "v2" and "age_min" in raw:
+            structured = ExtractionV2.model_validate(raw)
+            extraction.fields = [field for field in extraction.fields if field.name != "age"]
+            age, age_drop = ground_age(text, structured)
+        else:
+            age = None
+        kept, dropped = ground(text, extraction)
+        if age is not None:
+            kept.append(age)
+        if age_drop is not None:
+            logger.info("intake_age_ungrounded", extra={"reason": age_drop})
         if dropped:
             logger.info("intake_fields_ungrounded")
         return {
             "kept": [f.model_dump() for f in kept],
             "ungrounded": [f.model_dump() for f in dropped],
+            **({"age_grounding_drop": age_drop} if self.extraction_schema == "v2" else {}),
         }
 
     def merge(self, state: IntakeState) -> dict[str, Any]:

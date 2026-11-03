@@ -67,7 +67,14 @@ class IntakeService:
                     # Tables are installed by Alembic as the migration owner; runtime has no DDL.
                     saver = AsyncPostgresSaver(self.pool)
                     self.graph = build_graph(
-                        IntakeNodes(self.llm, self.resources, self.factory, self.enqueue), saver
+                        IntakeNodes(
+                            self.llm,
+                            self.resources,
+                            self.factory,
+                            self.enqueue,
+                            self.settings.extraction_schema,
+                        ),
+                        saver,
                     )
         return self.graph
 

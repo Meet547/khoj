@@ -38,7 +38,13 @@ artifacts/zipnet-inspection/
 # Generated evidence stays local. Publish documentation and curated regression inputs.
 artifacts/**
 !artifacts/**/
-!artifacts/**/*.md
+# Aggregate speech-evaluation reports only (explicit allowlist).
+!artifacts/speech-eval/wer_report.md
+!artifacts/speech-eval/field_recovery.md
+!artifacts/speech-eval/field_recovery_run2.md
+!artifacts/speech-eval/normalisation_rescore.md
+!artifacts/speech-eval/hindi_hinglish_diagnostic.md
+!artifacts/speech-eval/diagnostic_hygiene.md
 !artifacts/b1/hindi-synthetic-8s.wav
 !artifacts/b2-followup/baseline/llm.py
 !artifacts/b2-followup/baseline/models.yaml

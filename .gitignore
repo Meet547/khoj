@@ -84,3 +84,39 @@ next-env.d.ts
 
 # Local publication audit reports are generated, not source.
 /artifacts/publication/
+
+# Generated audio exports and speech evaluation data.
+*.zip
+output/
+khoj_speech_eval_v1/
+artifacts/**/*.wav
+artifacts/**/*.mp3
+artifacts/**/*.m4a
+artifacts/**/*.webm
+
+# Local synthetic STT diagnostic.
+/artifacts/speech-eval/hinglish_script_check.md
+
+# Local field recovery diagnostic.
+/artifacts/speech-eval/field_diagnostic.md
+
+# Local speech evaluation preregistrations.
+/artifacts/speech-eval/*_preregistration.md
+
+# Held-out evaluation sets: quarantined until isolation is verified and reviewer sign-off is recorded.
+/khoj-backend/evals/heldout_v3/
+/khoj-backend/evals/heldout_v4/
+
+# Local dry-run markers, in any folder.
+**/.dryrun_ok
+
+# Held-out evaluation sets: quarantined until isolation is verified and reviewer sign-off is recorded.
+/khoj-backend/evals/heldout_v3/
+/khoj-backend/evals/heldout_v4/
+
+# Local dry-run markers, in any folder.
+**/.dryrun_ok
+
+# Held-out sets v3 and v4: file-level rules, so they apply even when a folder is absent.
+/khoj-backend/evals/heldout_v3/**
+/khoj-backend/evals/heldout_v4/**
